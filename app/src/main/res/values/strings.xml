@@ -1,0 +1,11 @@
+<resources>
+
+    <string name="app_name">Shavesasa</string>
+    <string name="FACEBOOK_APP_ID">195848568307018</string>
+    <string name="ACCOUNT_KIT_CLIENT_TOKEN">[ACCOUNT_KIT_CLIENT_TOKEN]</string>
+    <string name="facebook_application_id" translatable="false">195848568307018</string>
+    <string name="facebook_login_protocol_scheme" translatable="false">fb195848568307018</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>

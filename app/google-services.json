@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "278945982990",
+    "firebase_url": "https://shavesasa.firebaseio.com",
+    "project_id": "shavesasa",
+    "storage_bucket": "shavesasa.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:278945982990:android:2aa47a1e874665bb362a5f",
+        "android_client_info": {
+          "package_name": "com.example.shavesasa"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "278945982990-sd973raq0shitoirlsdstfh28sqljmmi.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.shavesasa",
+            "certificate_hash": "71d3c84946a250285617a089049c8e7d9c06feec"
+          }
+        },
+        {
+          "client_id": "278945982990-4nd40lun1l1fpen6e3jgtr3c3gfvnvic.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAqlq3DO44zlj6YBh4bxxGbEVlZbY3VtqY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "278945982990-4nd40lun1l1fpen6e3jgtr3c3gfvnvic.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
