@@ -15,6 +15,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.Common.Common;
+import com.facebook.accountkit.AccessToken;
+import com.facebook.accountkit.AccountKit;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.IdpResponse;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -36,7 +39,19 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+
+        AccessToken accessToken = AccountKit.getCurrentAccessToken();
+        if (accessToken != null) //Check if user is already logged in
+        {
+            Intent intent = new Intent(this, HomeActivity.class);
+            intent.putExtra(Common.IS_LOGIN, true);
+            startActivity(intent);
+            finish();
+        }
+        else {
+            setContentView(R.layout.activity_main);
+        }
+
 
         btn_sign_out = (Button)findViewById(R.id.btn_sign_out);
         btn_sign_out.setOnClickListener(new View.OnClickListener() {

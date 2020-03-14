@@ -5,8 +5,8 @@ android {
     compileSdkVersion 28
     defaultConfig {
         applicationId "com.example.shavesasa"
-        minSdkVersion 'o at least 1'
-        targetSdkVersion 28
+        minSdkVersion 23
+        targetSdkVersion 26
         multiDexEnabled true
         versionCode 1
         versionName "1.0"
@@ -48,4 +48,5 @@ dependencies {
     implementation 'com.jakewharton:butterknife:10.0.0'
     annotationProcessor 'com.jakewharton:butterknife-compiler:10.0.0'
     implementation 'com.facebook.android:account-kit-sdk:5.+'
+    implementation 'com.github.d-max:spots-dialog:1.1@aar'
 }
