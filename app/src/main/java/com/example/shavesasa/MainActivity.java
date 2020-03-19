@@ -77,9 +77,9 @@ public class MainActivity extends AppCompatActivity {
         });
         providers = Arrays.asList(
                 new AuthUI.IdpConfig.EmailBuilder().build(),
-                new AuthUI.IdpConfig.PhoneBuilder().build(),
-                new AuthUI.IdpConfig.FacebookBuilder().build(),
-                new AuthUI.IdpConfig.GoogleBuilder().build()
+                new AuthUI.IdpConfig.PhoneBuilder().build()
+                //new AuthUI.IdpConfig.FacebookBuilder().build(),
+                //new AuthUI.IdpConfig.GoogleBuilder().build()
         );
         showSignInOptions();
 
@@ -104,6 +104,11 @@ public class MainActivity extends AppCompatActivity {
                 //Get user and display email
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                 Toast.makeText(this, ""+user.getEmail(), Toast.LENGTH_SHORT).show();
+
+                Intent intent = new Intent(this, HomeActivity.class);
+                startActivity(intent);
+                finish();
+
                 //Signout
                 btn_sign_out.setEnabled(true);
             }
@@ -111,5 +116,6 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(this, ""+response.getError().getMessage(), Toast.LENGTH_SHORT).show();
             }
         }
+
     }
 }

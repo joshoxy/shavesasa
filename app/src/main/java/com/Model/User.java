@@ -3,7 +3,7 @@ package com.Model;
 public class User {
     private String name, address, phoneNumber;
 
-    public User() {
+    public User(String s, String toString) {
     }
 
     public User(String name, String address, String phoneNumber) {

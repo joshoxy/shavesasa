@@ -26,6 +26,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -55,13 +57,39 @@ public class HomeActivity extends AppCompatActivity {
        //Initialize Firebase
         userRef = FirebaseFirestore.getInstance().collection("User");
         dialog = new  SpotsDialog.Builder().setContext(this).setCancelable(false).build();
+        updateDialog();
+
 
         //Check login
-        if (getIntent() != null){
+        /*if (getIntent() != null){
             boolean isLogin = getIntent().getBooleanExtra(Common.IS_LOGIN, false);
             if (isLogin){
                 dialog.show();
-                AccountKit.getCurrentAccount(new AccountKitCallback<Account>() {
+
+                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                if (user != null){
+                    DocumentReference currentUser = userRef.document(user.getPhoneNumber().toString());
+                    currentUser.get()
+                            .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                    if (task.isSuccessful()){
+                                        DocumentSnapshot userSnapShot = task.getResult();
+                                        if (!userSnapShot.exists()){
+
+                                            showUpdateDialog(user.getPhoneNumber().toString());
+
+                                        }
+
+                                        if (dialog.isShowing())
+                                            dialog.dismiss();
+                                    }
+                                }
+                            });
+                }
+
+
+               *//* AccountKit.getCurrentAccount(new AccountKitCallback<Account>() {
                     @Override
                     public void onSuccess(Account account) {
                         if (account != null){
@@ -72,9 +100,14 @@ public class HomeActivity extends AppCompatActivity {
                                         public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                                          if (task.isSuccessful()){
                                              DocumentSnapshot userSnapShot = task.getResult();
-                                             if (!userSnapShot.exists())
+                                             if (!userSnapShot.exists()){
+
                                                  showUpdateDialog(account.getPhoneNumber().toString());
 
+                                             }
+
+                                             if (dialog.isShowing())
+                                                 dialog.dismiss();
                                          }
                                         }
                                     });
@@ -87,12 +120,13 @@ public class HomeActivity extends AppCompatActivity {
                         Toast.makeText(HomeActivity.this, ""+accountKitError.getErrorType().getMessage(), Toast.LENGTH_SHORT);
 
                     }
-                });
+                });*//*
+
             }
-        }
+        }*/
 
         dialog = new SpotsDialog.Builder().setContext(this).setCancelable(false).build();
-        dialog.show();
+        //dialog.show();
 
 
       bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -109,6 +143,55 @@ public class HomeActivity extends AppCompatActivity {
       bottomNavigationView.setSelectedItemId(R.id.action_home);
     }
 
+    private void updateDialog() {
+        //Initialize dialog
+        bottomSheetDialog = new BottomSheetDialog(this);
+        bottomSheetDialog.setTitle("One more step!");
+        bottomSheetDialog.setCanceledOnTouchOutside(false);
+        bottomSheetDialog.setCancelable(false);
+        View sheetView = getLayoutInflater().inflate(R.layout.layout_update_information, null);
+
+        Button btn_update = (Button)sheetView.findViewById(R.id.btn_update);
+        TextInputEditText edt_name = (TextInputEditText)sheetView.findViewById(R.id.edt_name);
+        TextInputEditText edt_phone = (TextInputEditText)sheetView.findViewById(R.id.edt_phone);
+        TextInputEditText edt_address = (TextInputEditText)sheetView.findViewById(R.id.edt_address);
+
+        btn_update.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (!dialog.isShowing())
+                    dialog.show();
+
+                User user = new User(edt_name.getText().toString(), edt_phone.getText().toString(),
+                        edt_address.getText().toString());
+
+                userRef.document()
+                        .set(user)
+                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                bottomSheetDialog.dismiss();
+                                if (dialog.isShowing())
+                                    dialog.dismiss();
+                                Toast.makeText(HomeActivity.this, "Address Updated", Toast.LENGTH_SHORT);
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        bottomSheetDialog.dismiss();
+                        if (dialog.isShowing())
+                            dialog.dismiss();
+                        Toast.makeText(HomeActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT);
+                    }
+                });
+            }
+        });
+
+        bottomSheetDialog.setContentView(sheetView);
+        bottomSheetDialog.show();
+    }
+
     private boolean loadFragment(Fragment fragment) {
         if (fragment != null){
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment)
@@ -118,9 +201,6 @@ public class HomeActivity extends AppCompatActivity {
         return false;
     }
     private void showUpdateDialog(final String phoneNumber){
-
-        if (dialog.isShowing())
-            dialog.dismiss();
 
         //Initialize dialog
         bottomSheetDialog = new BottomSheetDialog(this);
@@ -142,6 +222,7 @@ public class HomeActivity extends AppCompatActivity {
 
                 User user = new User(edt_name.getText().toString(),
                         edt_address.getText().toString(), phoneNumber);
+
                 userRef.document(phoneNumber)
                         .set(user)
                         .addOnSuccessListener(new OnSuccessListener<Void>() {
