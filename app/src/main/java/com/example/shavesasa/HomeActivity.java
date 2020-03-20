@@ -60,6 +60,7 @@ public class HomeActivity extends AppCompatActivity {
         updateDialog();
 
 
+
         //Check login
         /*if (getIntent() != null){
             boolean isLogin = getIntent().getBooleanExtra(Common.IS_LOGIN, false);
@@ -174,6 +175,9 @@ public class HomeActivity extends AppCompatActivity {
                                 bottomSheetDialog.dismiss();
                                 if (dialog.isShowing())
                                     dialog.dismiss();
+
+                                Common.currentUser = user;
+                                bottomNavigationView.setSelectedItemId(R.id.action_home);
                                 Toast.makeText(HomeActivity.this, "Address Updated", Toast.LENGTH_SHORT);
                             }
                         }).addOnFailureListener(new OnFailureListener() {
