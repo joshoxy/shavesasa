@@ -135,7 +135,7 @@ public class HomeFragment extends Fragment implements IBannerLoadListener, ILook
 
     private void setUserInformation() {
         layout_user_information.setVisibility(View.VISIBLE);
-        txt_user_name.setText(Common.currentUser.getName());
+        //txt_user_name.setText(Common.currentUser.getName());
     }
 
     @Override

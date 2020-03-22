@@ -9,10 +9,13 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.shavesasa.Common.Common;
@@ -31,91 +34,79 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
-    private static final int MY_REQUEST_CODE = 7117 ; //Any number
-    List<AuthUI.IdpConfig> providers;
-    Button btn_sign_out;
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+    Button btn_reg;
+    EditText fname;
+    EditText lname;
+    EditText phone;
+    EditText email;
+    EditText pass;
+    TextView txt_sign_in;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
 
-        AccessToken accessToken = AccountKit.getCurrentAccessToken();
-        if (accessToken != null) //Check if user is already logged in
-        {
-            Intent intent = new Intent(this, HomeActivity.class);
-            intent.putExtra(Common.IS_LOGIN, true);
-            startActivity(intent);
-            finish();
-        }
-        else {
-            setContentView(R.layout.activity_main);
-        }
+        btn_reg = (Button)findViewById(R.id.btn_reg);
+        fname = (EditText)findViewById(R.id.fname);
+        lname = (EditText)findViewById(R.id.lname);
+        phone = (EditText)findViewById(R.id.phone);
+        email = (EditText)findViewById(R.id.email);
+        pass = (EditText)findViewById(R.id.pass);
+        txt_sign_in = (TextView)findViewById(R.id.txt_signin);
 
+        btn_reg.setOnClickListener(this);
 
-        btn_sign_out = (Button)findViewById(R.id.btn_sign_out);
-        btn_sign_out.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //Logout
-                AuthUI.getInstance().signOut(MainActivity.this)
-                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                btn_sign_out.setEnabled(false);
-                                showSignInOptions();
-
-                            }
-                        }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(MainActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT);
-
-                    }
-                });
-            }
-        });
-        providers = Arrays.asList(
-                new AuthUI.IdpConfig.EmailBuilder().build(),
-                new AuthUI.IdpConfig.PhoneBuilder().build()
-                //new AuthUI.IdpConfig.FacebookBuilder().build(),
-                //new AuthUI.IdpConfig.GoogleBuilder().build()
-        );
-        showSignInOptions();
-
-
-    }
-
-    private void showSignInOptions() {
-        startActivityForResult(
-                AuthUI.getInstance().createSignInIntentBuilder()
-                .setAvailableProviders(providers)
-                .setTheme(R.style.MyTheme)
-                .build(), MY_REQUEST_CODE
-        );
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == MY_REQUEST_CODE){
-            IdpResponse response = IdpResponse.fromResultIntent(data);
-            if (resultCode ==RESULT_OK){
-                //Get user and display email
-                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                Toast.makeText(this, ""+user.getEmail(), Toast.LENGTH_SHORT).show();
-
-                Intent intent = new Intent(this, HomeActivity.class);
-                startActivity(intent);
-                finish();
-
-                //Signout
-                btn_sign_out.setEnabled(true);
-            }
-            else {
-                Toast.makeText(this, ""+response.getError().getMessage(), Toast.LENGTH_SHORT).show();
-            }
+    public void onClick(View v) {
+        if (v == btn_reg){
+            registerUser();
         }
 
+        if (v == txt_sign_in){
+            //Open sign in
+        }
+
+    }
+
+    private void registerUser() {
+        String first = fname.getText().toString().trim();
+        String last = lname.getText().toString().trim();
+        String Email = email.getText().toString();
+        String Phone = phone.getText().toString();
+        String password = pass.getText().toString();
+
+        if (TextUtils.isEmpty(first)){
+            Toast.makeText(this, "Please enter first name", Toast.LENGTH_SHORT).show();
+            return;
+
+        }
+
+        if (TextUtils.isEmpty(last)){
+            Toast.makeText(this, "Please enter last name", Toast.LENGTH_SHORT).show();
+            return;
+
+        }
+
+        if (TextUtils.isEmpty(Email)){
+            Toast.makeText(this, "Please enter email", Toast.LENGTH_SHORT).show();
+            return;
+
+        }
+
+        if (TextUtils.isEmpty(Phone)){
+            Toast.makeText(this, "Please enter phone", Toast.LENGTH_SHORT).show();
+            return;
+
+        }
+
+        if (TextUtils.isEmpty(password)){
+            Toast.makeText(this, "Please enter password", Toast.LENGTH_SHORT).show();
+            return;
+
+        }
     }
 }
