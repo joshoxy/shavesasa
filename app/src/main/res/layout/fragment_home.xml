@@ -33,7 +33,7 @@
                 android:text="Joshua"
                 android:id="@+id/txt_user_name"
                 android:textColor="@color/white"
-                android:textSize="22sp"
+                android:textSize="18sp"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
 

@@ -95,14 +95,14 @@ public class sign_in extends AppCompatActivity implements View.OnClickListener {
         }
 
 
-        progressDialog.setMessage("Please wait...");
-        progressDialog.show();
+      /*  progressDialog.setMessage("Please wait...");
+        progressDialog.show();*/
 
         firebaseAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                     progressDialog.dismiss();
+                     //progressDialog.dismiss();
                      if (task.isSuccessful()){
                          Toast.makeText(getApplicationContext(), "Successfully Logged in", Toast.LENGTH_SHORT).show();
                          startActivity(new Intent(getApplicationContext(), HomeActivity.class));
