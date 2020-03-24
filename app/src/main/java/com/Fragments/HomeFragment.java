@@ -1,6 +1,7 @@
 package com.Fragments;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -11,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,6 +28,8 @@ import com.example.shavesasa.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -54,6 +58,9 @@ public class HomeFragment extends Fragment implements IBannerLoadListener, ILook
     @BindView(R.id.recycler_look_book)
     RecyclerView recycler_look_book;
 
+
+    FirebaseAuth firebaseAuth;
+
     CollectionReference bannerRef, lookbookRef;
 
     IBannerLoadListener iBannerLoadListener;
@@ -70,6 +77,11 @@ public class HomeFragment extends Fragment implements IBannerLoadListener, ILook
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        firebaseAuth = FirebaseAuth.getInstance();
+        FirebaseUser user = firebaseAuth.getCurrentUser();
+
+
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         unbinder = ButterKnife.bind(this,view);
@@ -134,8 +146,16 @@ public class HomeFragment extends Fragment implements IBannerLoadListener, ILook
     }
 
     private void setUserInformation() {
-        layout_user_information.setVisibility(View.VISIBLE);
-        //txt_user_name.setText(Common.currentUser.getName());
+        firebaseAuth = FirebaseAuth.getInstance();
+        FirebaseUser user = firebaseAuth.getCurrentUser();
+
+        if (user != null){
+            layout_user_information.setVisibility(View.VISIBLE);
+            txt_user_name.setText(user.getEmail());
+        }else {
+            txt_user_name.setText("Null");
+        }
+
     }
 
     @Override

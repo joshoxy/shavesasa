@@ -1,38 +1,53 @@
 package com.Model;
 
 public class User {
-    private String name, address, phoneNumber;
+    private String first,last,Email,Phone,password;
 
-    public User(String s, String toString) {
+    public User(String first, String last, String email, String phone, String password) {
+        this.first = first;
+        this.last = last;
+        Email = email;
+        Phone = phone;
+        this.password = password;
     }
 
-    public User(String name, String address, String phoneNumber) {
-        this.name = name;
-        this.address = address;
-        this.phoneNumber = phoneNumber;
+    public String getFirst() {
+        return first;
     }
 
-    public String getName() {
-        return name;
+    public void setFirst(String first) {
+        this.first = first;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public String getLast() {
+        return last;
     }
 
-    public String getAddress() {
-        return address;
+    public void setLast(String last) {
+        this.last = last;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
+    public String getEmail() {
+        return Email;
     }
 
-    public String getPhoneNumber() {
-        return phoneNumber;
+    public void setEmail(String email) {
+        Email = email;
     }
 
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
+    public String getPhone() {
+        return Phone;
+    }
+
+    public void setPhone(String phone) {
+        Phone = phone;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }
