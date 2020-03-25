@@ -79,6 +79,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         txt_sign_in = (TextView)findViewById(R.id.txt_signin);
 
         btn_reg.setOnClickListener(this);
+        txt_sign_in.setOnClickListener(this);
 
         if (firebaseAuth.getCurrentUser() != null){
             startActivity(new Intent(getApplicationContext(), HomeActivity.class));
