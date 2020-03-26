@@ -60,7 +60,6 @@
             android:text="Next"
             android:layout_above="@+id/txt_skip"
             android:layout_centerHorizontal="true"
-            android:enabled="false"
             android:layout_weight="1"
             android:background="@color/colorButton"
             android:textColor="@color/white"

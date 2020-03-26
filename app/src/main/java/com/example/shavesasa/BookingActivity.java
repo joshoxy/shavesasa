@@ -14,6 +14,9 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import com.Adapter.MyViewPageAdapter;
+
+
 public class BookingActivity extends AppCompatActivity {
 
     @BindView(R.id.step_view)
@@ -35,7 +38,29 @@ public class BookingActivity extends AppCompatActivity {
         setColorButton();
 
         //View
-        viewPager.setAdapter(new MyViewPagerAdapter(getSupportFragmentManager()));
+        viewPager.setAdapter(new MyViewPageAdapter(getSupportFragmentManager()));
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                if (position == 0)
+                    btn_previous_step.setEnabled(false);
+                else
+                    btn_previous_step.setEnabled(true);
+
+                setColorButton();
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
     }
 
     private void setColorButton() {
