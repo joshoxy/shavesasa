@@ -1,11 +1,30 @@
 package com.example.shavesasa;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.viewpager.widget.ViewPager;
 
+import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.widget.Button;
+import android.widget.Toast;
 
+import com.Model.Barber;
+import com.example.shavesasa.Common.Common;
+import com.example.shavesasa.Common.NonSwipeViewPager;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.shuhart.stepview.StepView;
 
 import java.util.ArrayList;
@@ -13,20 +32,106 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
+import dmax.dialog.SpotsDialog;
 
 import com.Adapter.MyViewPageAdapter;
 
 
 public class BookingActivity extends AppCompatActivity {
 
+    LocalBroadcastManager localBroadcastManager;
+    AlertDialog dialog;
+    CollectionReference barberRef;
+
     @BindView(R.id.step_view)
     StepView stepView;
     @BindView(R.id.view_pager)
-    ViewPager viewPager;
+    NonSwipeViewPager viewPager;
     @BindView(R.id.btn_previous_step)
     Button btn_previous_step;
     @BindView(R.id.btn_next_step)
     Button btn_next_step;
+
+    //Event
+    @OnClick(R.id.btn_previous_step)
+    void previousStep(){
+        if (Common.step == 3 || Common.step > 0)
+        {
+            Common.step --;
+            viewPager.setCurrentItem(Common.step);
+        }
+    }
+    @OnClick(R.id.btn_next_step)
+    void  nextClick(){
+        if (Common.step < 3 || Common.step == 0){
+            Common.step++;
+            if (Common.step == 1)
+            {
+                if (Common.currentBarbershop != null)
+                    loadBarber(Common.currentBarbershop.getBarbershopID());
+            }
+            viewPager.setCurrentItem(Common.step);
+
+        }
+
+    }
+
+    private void loadBarber(String barbershopID) {
+        dialog.show();
+
+        //Display all Barbers of a barbershop
+        if (TextUtils.isEmpty(Common.city)){
+            barberRef = FirebaseFirestore.getInstance()
+                    .collection("Barbers")
+                    .document(Common.city)
+                    .collection("Branch")
+                    .document(barbershopID)
+                    .collection("Barber");
+
+            barberRef.get()
+                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            ArrayList<Barber> barbers = new ArrayList<>();
+                            for (QueryDocumentSnapshot barberSnapShot:task.getResult())
+                            {
+                                Barber barber = barberSnapShot.toObject(Barber.class);
+                                barber.setBarberId(barberSnapShot.getId());
+
+                                barbers.add(barber);
+                            }
+                            //Send Broadcast to BookingStep2
+                            Intent intent = new Intent(Common.KEY_BARBER_LOAD_DONE);
+                            intent.putParcelableArrayListExtra(Common.KEY_BARBER_LOAD_DONE, barbers);
+                            localBroadcastManager.sendBroadcast(intent);
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                           dialog.dismiss();
+                        }
+                    });
+        }
+
+    }
+
+    //Broadcast receiver
+    private BroadcastReceiver buttonNextReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Common.currentBarbershop = intent.getParcelableExtra(Common.KEY_BARBERSHOP_STORE);
+            btn_next_step.setEnabled(true);
+            setColorButton();
+        }
+    };
+
+    @Override
+    protected void onDestroy() {
+        localBroadcastManager.unregisterReceiver(buttonNextReceiver);
+        super.onDestroy();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,11 +139,18 @@ public class BookingActivity extends AppCompatActivity {
         setContentView(R.layout.activity_booking);
         ButterKnife.bind(BookingActivity.this);
 
+
+        dialog = new SpotsDialog.Builder().setContext(this).build();
+
+        localBroadcastManager = LocalBroadcastManager.getInstance(this);
+        localBroadcastManager.registerReceiver(buttonNextReceiver, new IntentFilter(Common.KEY_ENABLE_BUTTON_NEXT));
+
         setupStepView();
         setColorButton();
 
         //View
         viewPager.setAdapter(new MyViewPageAdapter(getSupportFragmentManager()));
+        viewPager.setOffscreenPageLimit(4);  //because we have 4 fragments
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -47,6 +159,8 @@ public class BookingActivity extends AppCompatActivity {
 
             @Override
             public void onPageSelected(int position) {
+
+                stepView.go(position, true);
                 if (position == 0)
                     btn_previous_step.setEnabled(false);
                 else

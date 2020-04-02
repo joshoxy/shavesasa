@@ -17,6 +17,7 @@ import com.Adapter.MyBarberShopAdapter;
 import com.Interface.AllBarberShopLoadListener;
 import com.Interface.IBranchLoadListener;
 import com.Model.Barbershop;
+import com.example.shavesasa.Common.Common;
 import com.example.shavesasa.Common.SpacesItemDecoration;
 import com.example.shavesasa.R;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -129,6 +130,8 @@ public class BookingStep1Fragment extends Fragment implements AllBarberShopLoadL
     private void loadBranch(String cityName) {
         dialog.show();
 
+        Common.city = cityName;
+
         branchRef = FirebaseFirestore.getInstance()
                 .collection("Barbers")
                 .document(cityName)
@@ -140,7 +143,11 @@ public class BookingStep1Fragment extends Fragment implements AllBarberShopLoadL
                 List<Barbershop> list = new ArrayList<>();
               if (task.isSuccessful()){
                   for (QueryDocumentSnapshot documentSnapshot:task.getResult())
-                      list.add(documentSnapshot.toObject(Barbershop.class));
+                  {
+                      Barbershop barbershop = documentSnapshot.toObject(Barbershop.class);
+                      barbershop.setBarbershopID(documentSnapshot.getId());
+                      list.add(barbershop);
+                  }
                   iBranchLoadListener.onBranchShopLoadSuccess(list);
 
               }

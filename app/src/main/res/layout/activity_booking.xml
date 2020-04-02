@@ -26,7 +26,7 @@
         app:sv_doneTextColor="@color/white"
         app:sv_doneStepMarkColor="@color/white" />
 
-    <androidx.viewpager.widget.ViewPager
+    <com.example.shavesasa.Common.NonSwipeViewPager
         android:id="@+id/view_pager"
         android:layout_below="@+id/step_view"
         android:layout_above="@+id/layout_button"
@@ -58,6 +58,7 @@
         <Button
             android:id="@+id/btn_next_step"
             android:text="Next"
+            android:enabled="false"
             android:layout_above="@+id/txt_skip"
             android:layout_centerHorizontal="true"
             android:layout_weight="1"
