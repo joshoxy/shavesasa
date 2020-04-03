@@ -16,6 +16,7 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.Adapter.MyBarberAdapter;
 import com.Model.Barber;
 import com.example.shavesasa.Common.Common;
 import com.example.shavesasa.Common.SpacesItemDecoration;
@@ -38,6 +39,9 @@ public class BookingStep2Fragment extends Fragment {
         @Override
         public void onReceive(Context context, Intent intent) {
             ArrayList<Barber> barberArrayList = intent.getParcelableArrayListExtra(Common.KEY_BARBER_LOAD_DONE);
+
+            MyBarberAdapter adapter = new MyBarberAdapter(getContext(), barberArrayList);
+            recycler_barber.setAdapter(adapter);
         }
     };
 
