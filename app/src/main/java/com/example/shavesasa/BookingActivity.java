@@ -81,7 +81,7 @@ public class BookingActivity extends AppCompatActivity {
         dialog.show();
 
         //Display all Barbers of a barbershop
-        if (TextUtils.isEmpty(Common.city)){
+        if (!TextUtils.isEmpty(Common.city)){
             barberRef = FirebaseFirestore.getInstance()
                     .collection("Barbers")
                     .document(Common.city)
@@ -198,6 +198,7 @@ public class BookingActivity extends AppCompatActivity {
     private void setupStepView() {
         List<String> stepList = new ArrayList<>();
         stepList.add("Barbershop");
+        stepList.add("Barber");
         stepList.add("Time");
         stepList.add("Confirm");
         stepView.setSteps(stepList);
